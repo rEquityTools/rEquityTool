@@ -4,7 +4,9 @@ pkgdown_sha: ~
 articles:
   myanmar-worked-example: myanmar-worked-example.html
   rEquityTool: rEquityTool.html
-last_built: 2026-09-30T03:42Z
+  scopes: scopes.html
+  workbooks: workbooks.html
+last_built: 2026-09-30T04:09Z
 urls:
   reference: https://requitytools.github.io/rEquityTool/reference
   article: https://requitytools.github.io/rEquityTool/articles

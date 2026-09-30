@@ -6,7 +6,13 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Wealth scores and wealth quintiles from EquityTool questionnaires • rEquityTool</title>
-<script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- mathjax math --><script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script><script>
+  window.MathJax = {
+    chtml: {
+      fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
+    }
+  };
+</script><script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="deps/Source_Sans_3-0.4.10/font.css" rel="stylesheet">
 <link href="deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet">
@@ -22,11 +28,11 @@
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-success" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">rEquityTool</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Unreleased version">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +46,10 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/myanmar-worked-example.html">Worked example: Myanmar</a></li>
+<li><a class="dropdown-item" href="articles/myanmar-worked-example.html">Worked example: Myanmar, end to end</a></li>
+    <li><hr class="dropdown-divider"></li>
+    <li><a class="dropdown-item" href="articles/scopes.html">Choosing a wealth quintile scope</a></li>
+    <li><a class="dropdown-item" href="articles/workbooks.html">Working with different country workbooks</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -49,6 +58,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://equitytool.org" aria-label="EquityTool website"><span class="fa fa-globe"></span></a></li>
 <li class="nav-item"><a class="external-link nav-link" href="https://github.com/rEquityTools/rEquityTool/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
@@ -101,7 +111,44 @@
 <code class="sourceCode R"><span><span class="va">tool</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/et_parse_workbook.html">et_parse_workbook</a></span><span class="op">(</span><span class="fu"><a href="reference/et_example.html">et_example</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">demo_survey</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/et_score.html">et_score</a></span><span class="op">(</span><span class="va">demo_survey</span>, <span class="va">tool</span>, scope <span class="op">=</span> <span class="st">"national"</span><span class="op">)</span></span></code></pre></div>
-<p>See <code><a href="articles/rEquityTool.html">vignette("rEquityTool")</a></code> for the full walkthrough, and <a href="https://requitytools.github.io/rEquityTool/articles/myanmar-worked-example.html"><strong>Worked example: Myanmar</strong></a> for a complete analysis with a real country workbook — from opening the spreadsheet to reporting national, urban and sample-based quintiles.</p>
+</div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<p>Full documentation: <a href="https://requitytools.github.io/rEquityTool/" class="uri">https://requitytools.github.io/rEquityTool/</a></p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr>
+<th>Article</th>
+<th>What it covers</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><a href="https://requitytools.github.io/rEquityTool/articles/rEquityTool.html">Get started</a></td>
+<td>Installation, the core workflow, the main caveats</td>
+</tr>
+<tr>
+<td><a href="https://requitytools.github.io/rEquityTool/articles/myanmar-worked-example.html">Worked example: Myanmar</a></td>
+<td>A complete analysis with a real country workbook, in twelve steps — from opening the spreadsheet to reporting national, urban and sample-based quintiles</td>
+</tr>
+<tr>
+<td><a href="https://requitytools.github.io/rEquityTool/articles/scopes.html">Choosing a wealth quintile scope</a></td>
+<td>National vs urban vs rural vs sample: what each means and when to use it</td>
+</tr>
+<tr>
+<td><a href="https://requitytools.github.io/rEquityTool/articles/workbooks.html">Working with different country workbooks</a></td>
+<td>The three structural variants, rural/urban rescaling, and how to check a workbook before trusting it</td>
+</tr>
+<tr>
+<td><a href="https://requitytools.github.io/rEquityTool/reference/">Reference</a></td>
+<td>Every function, grouped by task</td>
+</tr>
+</tbody>
+</table>
+<p>Offline, from R: <code><a href="articles/rEquityTool.html">vignette("rEquityTool")</a></code>, <code><a href="articles/myanmar-worked-example.html">vignette("myanmar-worked-example")</a></code>, <code><a href="articles/scopes.html">vignette("scopes")</a></code>, <code><a href="articles/workbooks.html">vignette("workbooks")</a></code>.</p>
 </div>
 <div class="section level2">
 <h2 id="what-scope-means">What <code>scope</code> means<a class="anchor" aria-label="anchor" href="#what-scope-means"></a>
@@ -200,6 +247,8 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/rEquityTools/rEquityTool/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/rEquityTools/rEquityTool/issues" class="external-link">Report a bug</a></li>
+<li><a href="https://equitytool.org/countries/" class="external-link">Download a country workbook</a></li>
+<li><a href="https://equitytool.org/methods/" class="external-link">How the EquityTool is built</a></li>
 </ul>
 </div>
 
