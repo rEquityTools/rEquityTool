@@ -1,0 +1,71 @@
+url: https://requitytools.github.io/rEquityTool/
+
+template:
+  bootstrap: 5
+  bslib:
+    primary: "#1f6f78"
+    base_font: {google: "Source Sans 3"}
+    heading_font: {google: "Source Sans 3"}
+    code_font: {google: "JetBrains Mono"}
+
+# pkgdown defaults to ragg for figures. Fall back to grDevices so the site can
+# be built on machines without a working ragg/systemfonts/textshaping stack.
+figures:
+  dev: grDevices::png
+  dpi: 96
+  fig.width: 7.5
+
+home:
+  title: Wealth scores and wealth quintiles from EquityTool questionnaires
+  description: >
+    Read an EquityTool country workbook, validate your survey data against it,
+    and assign households to wealth quintiles using the published national,
+    urban or rural cut-points, or your own sample's distribution.
+
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get started
+      href: articles/rEquityTool.html
+
+articles:
+- title: Articles
+  navbar: ~
+  contents:
+  - rEquityTool
+  - myanmar-worked-example
+
+reference:
+- title: Loading an EquityTool
+  desc: >
+    Find and read the country workbooks published at equitytool.org.
+  contents:
+  - et_find_workbooks
+  - et_parse_workbook
+  - et_example
+
+- title: Inspecting a tool
+  desc: >
+    What questions it asks, what the answers score, and where the quintile
+    boundaries fall.
+  contents:
+  - et_accessors
+
+- title: Scoring survey data
+  desc: >
+    Check response coding, then compute wealth scores and quintiles.
+  contents:
+  - et_validate
+  - et_score
+
+- title: Data
+  contents:
+  - demo_survey
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with

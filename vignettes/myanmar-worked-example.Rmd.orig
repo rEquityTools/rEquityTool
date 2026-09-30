@@ -1,0 +1,334 @@
+---
+title: "Worked example: Myanmar"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Worked example: Myanmar}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+options(width = 84)
+set.seed(2026)
+```
+
+This article walks through a complete analysis with a **real** EquityTool
+country workbook — Myanmar DHS 2015–16 — from opening the spreadsheet to
+reporting wealth quintiles three different ways.
+
+> **Why the outputs are real but the households are not.**
+> The workbook used here is the genuine file published by Metrics for
+> Management, so every score and cut-point you see below is the real Myanmar
+> tool. The *survey responses* are simulated, because household survey data is
+> not ours to publish. Everything else — the parsing, the scores, the
+> cut-points, the arithmetic — is exactly what you would get with your own data.
+>
+> This article is **pre-computed**: the code was run against a local copy of
+> the workbook and the results were baked in, so the package does not have to
+> ship EquityTool material. See `vignettes/precompile.R` in the package source.
+
+```{r}
+library(rEquityTool)
+```
+
+## Step 1 — Get the workbook
+
+Go to <https://equitytool.org/countries/>, choose your country, and download
+the **"public file"** / **"other platforms file"** spreadsheet. For Myanmar
+that is `Myanmar-DHS-2015-16-Other-Platforms-file-2018-08-30.xlsx`.
+
+Keep the file name. It records the survey and the release date, and you will
+want both in your methods section.
+
+If you have downloaded several countries into one folder, `et_find_workbooks()`
+will tell you what is there (showing the first few of `r nrow(et_find_workbooks(equitytool_dir))`):
+
+```{r}
+head(et_find_workbooks(equitytool_dir)[, c("country", "file")], 6)
+```
+
+Add `inspect = TRUE` to open each file and report what it contains before you
+commit to it:
+
+```{r}
+et_find_workbooks(file.path(equitytool_dir, "Myanmar"), inspect = TRUE)[
+  , c("country", "variant", "n_questions", "scopes", "issues")]
+```
+
+## Step 2 — Load the spreadsheet
+
+```{r}
+myanmar <- et_parse_workbook(myanmar_path, country = "Myanmar")
+myanmar
+```
+
+Read that summary before going further:
+
+- **Variant `national_urban`** — Myanmar publishes national and urban score
+  sets. (Fourteen other countries instead publish *rural* and urban sets that
+  must be rescaled onto a national scale; those need an `area` argument. Two
+  countries publish national only.)
+- **15 questions** — that is what your questionnaire must contain.
+- **Cross-check: 0 mismatches** — the package read the scores from the SPSS
+  syntax tab and compared them against the score table printed on the *Other
+  software* tab. For Myanmar the two agree exactly. They do not always: see the
+  end of this article.
+
+## Step 3 — See the questions you need to ask
+
+This is the questionnaire to put in your instrument. The response options must
+be coded `1`, `2`, `3` in the order shown — that is the single most important
+thing to get right.
+
+```{r}
+q <- et_questions(myanmar)
+head(q, 12)
+```
+
+The 15 questions, one row each:
+
+```{r}
+unique(q[, c("var", "question")])
+```
+
+## Step 4 — Inspect the scores and cut-points
+
+Each answer carries a score:
+
+```{r}
+s <- et_scores(myanmar)
+head(s[s$scope == "national", ], 10)
+```
+
+And the quintile boundaries — the numbers your household totals get compared
+against:
+
+```{r}
+et_cutoffs(myanmar)
+```
+
+So a Myanmar household is in the richest national quintile if its 15 item
+scores sum to at least `r sprintf("%.12g", subset(et_cutoffs(myanmar), scope == "national" & quintile == 5)$lower)`,
+and in the poorest if the total falls below
+`r sprintf("%.12g", subset(et_cutoffs(myanmar), scope == "national" & quintile == 2)$lower)`.
+
+## Step 5 — Your survey data
+
+Here is a simulated survey of 800 households, in the shape `rEquityTool`
+expects: one row per household, one column per question, named `Q1`–`Q15`.
+
+It is deliberately drawn to resemble a survey in poor, remote areas rather than
+a nationally representative sample, because that is the situation where the
+choice of cut-points actually matters.
+
+```{r}
+str(svy[, c("hhid", "township", "residence", "wt", "Q1", "Q2", "Q3")])
+```
+
+```{r}
+table(svy$township)
+```
+
+## Step 6 — Validate before you score
+
+Mis-coded answers fail *silently*: an unrecognised code becomes `NA`, the
+household drops out, and the quintiles that remain still look reasonable.
+Always check first.
+
+```{r}
+et_validate(svy, myanmar)
+```
+
+Our simulated data has a handful of `NA`s and a few `9` ("don't know") codes,
+which is what real fieldwork looks like. The report tells you exactly which
+questions and how many records you will lose.
+
+If your columns are not called `Q1`…`Q15`, map them — a partial mapping is
+fine, you only name the ones that differ:
+
+```{r, eval = FALSE}
+et_score(svy, myanmar, scope = "national",
+         vars = c(Q1 = "has_tv", Q2 = "has_mobile"))
+```
+
+## Step 7 — National wealth quintiles
+
+This uses the published Myanmar cut-points. Quintile 1 is the poorest fifth
+**of Myanmar** as measured by DHS 2015–16.
+
+```{r}
+nat <- et_score(svy, myanmar, scope = "national")
+table(nat$quintile, useNA = "ifany")
+```
+
+```{r}
+round(100 * prop.table(table(nat$quintile)), 1)
+```
+
+The groups are nowhere near equal, and that is the result, not a bug. A survey
+concentrated in poor rural townships should land disproportionately in the
+bottom national quintiles. For comparison, the published midline survey of
+conflict-affected townships in Kayin State found 59.0% of households in the
+poorest national quintile and 2.6% in the richest.
+
+## Step 8 — Urban quintiles
+
+If your respondents are urban residents, the national distribution is the wrong
+benchmark: almost everyone looks rich. Compare them with the national **urban**
+population instead.
+
+```{r}
+urb <- et_score(svy, myanmar, scope = "urban")
+table(urb$quintile, useNA = "ifany")
+```
+
+Note this uses a *different score set as well as* different cut-points — the
+urban index weights assets differently from the national one:
+
+```{r}
+head(s[s$scope == "urban", ], 4)
+```
+
+Apply it only to urban respondents. An urban quintile 1 household is not
+necessarily poorer than a rural quintile 5 household — the two are measured
+against different reference populations.
+
+## Step 9 — Sample-based quintiles
+
+Sometimes the question is not "how poor are these households compared with the
+country" but "who is worst off **among the people we surveyed**". For that, cut
+on your own sample's score distribution.
+
+Pass `weights` so the boundaries reflect the population your sample represents
+rather than the achieved sample.
+
+```{r}
+smp <- et_score(svy, myanmar, scope = "sample", weights = "wt")
+table(smp$quintile, useNA = "ifany")
+```
+
+Now the groups are approximately equal in size, by construction. The cut-points
+came from your data:
+
+```{r}
+attr(smp, "cutoffs")
+```
+
+You are not limited to fifths:
+
+```{r}
+ter <- et_score(svy, myanmar, scope = "sample", probs = c(1, 2) / 3)
+table(ter$quintile)
+```
+
+## Step 10 — The three side by side
+
+The **score is identical** in all three. Only the cut-points change.
+
+```{r}
+all.equal(nat$score, smp$score)
+```
+
+```{r}
+comparison <- data.frame(
+  national = as.integer(nat$quintile),
+  urban    = as.integer(urb$quintile),
+  sample   = as.integer(smp$quintile)
+)
+sapply(comparison, function(x) round(100 * prop.table(table(factor(x, 1:5))), 1))
+```
+
+```{r}
+# how households move between the national and the sample classification
+table(national = nat$quintile, sample = smp$quintile)
+```
+
+**Say which one you used.** "The poorest quintile in our sample" and "the
+poorest national quintile" are different groups of people, and reporting one as
+the other is a substantive error, not a presentational one.
+
+A reasonable default: report **national** quintiles to place your population in
+its country context, and **sample** quintiles when you are analysing gradients
+*within* your study population and need groups of usable size.
+
+## Step 11 — Use the result
+
+Attach the scores to your data and carry on:
+
+```{r}
+scored <- et_score(svy, myanmar, scope = "national", append = TRUE)
+names(scored)
+```
+
+Wealth distribution by township — the kind of table that goes in a baseline
+report:
+
+```{r}
+round(100 * prop.table(table(scored$township, scored$quintile), 1), 1)
+```
+
+Outcome coverage across wealth groups, which is the input to an equiplot or a
+concentration index:
+
+```{r}
+aggregate(improved_water ~ quintile, data = scored, FUN = function(x) round(mean(x), 3))
+```
+
+For the continuous ranking variable that concentration indices want, use
+`score` rather than `quintile`:
+
+```{r}
+summary(scored$score)
+```
+
+## Step 12 — Check for workbook problems
+
+Always look at the cross-check. Myanmar is clean:
+
+```{r}
+et_checks(myanmar)$mismatches
+et_checks(myanmar)$cutoff_mismatches
+et_checks(myanmar)$mislabelled_conditions
+```
+
+Two of the 69 published workbooks are not. In **Cambodia DHS 2021** the printed
+score table and the syntax tabs disagree about the order of the `Q8` response
+options, so the two documented routes give different scores for the same
+household. In **Djibouti EDAM 2017** the urban quintile block tests
+`NationalScore` where it should test `UrbanScore`. `rEquityTool` handles both
+and reports them through `et_checks()`; if you are working in either country,
+read that output before you trust the numbers.
+
+## What to write in your methods section
+
+Something like:
+
+> Household wealth was measured with the Myanmar EquityTool
+> (`r myanmar$survey`, released `r myanmar_release`), a 15-item asset index
+> derived from the DHS 2015–16 wealth index. Households were assigned to
+> national wealth quintiles using the published cut-points. Scoring was carried
+> out in R with the `rEquityTool` package (version
+> `r as.character(utils::packageVersion("rEquityTool"))`); households with any
+> missing or out-of-range item were excluded from the wealth analysis
+> (n = `r sum(is.na(nat$score))` of `r nrow(svy)`).
+
+And carry these caveats:
+
+- The EquityTool is a **simplified** index. Agreement with the full DHS wealth
+  index for Myanmar is 84.0%, kappa 0.751 (national) and 84.1%, kappa 0.751
+  (urban). Individual households can be misclassified by one quintile; the tool
+  is designed for describing groups.
+- Cut-points are anchored to the national distribution **in 2015–16**. The
+  further your fieldwork is from that date, the more "national quintile" means
+  "position relative to a historical benchmark".
+- These are **relative** measures of wealth, not absolute measures of poverty.
+
+## Where to go next
+
+The score and quintile are the ranking variable for the usual equity analyses:
+concentration indices and decomposition with
+[`rineq`](https://cran.r-project.org/package=rineq), equiplots and the slope
+index of inequality with
+[`ICEHmeasures`](https://cran.r-project.org/package=ICEHmeasures). Remember to
+carry your survey design into those analyses.

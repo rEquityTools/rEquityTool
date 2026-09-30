@@ -8,3 +8,6 @@
 ^docs$
 ^_pkgdown\.yml$
 ^LICENSE$
+^vignettes/.*\.Rmd\.orig$
+^vignettes/precompile\.R$
+^pkgdown$

@@ -1,7 +1,13 @@
 # rEquityTool
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/rEquityTools/rEquityTool/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/rEquityTools/rEquityTool/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/rEquityTools/rEquityTool/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/rEquityTools/rEquityTool/actions/workflows/pkgdown.yaml)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <!-- badges: end -->
+
+📖 **Documentation:** <https://requitytools.github.io/rEquityTool/>
 
 Wealth scores and wealth quintiles from
 [EquityTool](https://equitytool.org) questionnaires, in R.
@@ -58,7 +64,10 @@ data(demo_survey)
 et_score(demo_survey, tool, scope = "national")
 ```
 
-See `vignette("rEquityTool")` for the full walkthrough.
+See `vignette("rEquityTool")` for the full walkthrough, and
+[**Worked example: Myanmar**](https://requitytools.github.io/rEquityTool/articles/myanmar-worked-example.html)
+for a complete analysis with a real country workbook — from opening the
+spreadsheet to reporting national, urban and sample-based quintiles.
 
 ## What `scope` means
 
