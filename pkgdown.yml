@@ -1,0 +1,10 @@
+pandoc: 3.8.3
+pkgdown: 2.2.1
+pkgdown_sha: ~
+articles:
+  myanmar-worked-example: myanmar-worked-example.html
+  rEquityTool: rEquityTool.html
+last_built: 2026-09-30T03:42Z
+urls:
+  reference: https://requitytools.github.io/rEquityTool/reference
+  article: https://requitytools.github.io/rEquityTool/articles
