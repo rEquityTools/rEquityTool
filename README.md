@@ -64,10 +64,21 @@ data(demo_survey)
 et_score(demo_survey, tool, scope = "national")
 ```
 
-See `vignette("rEquityTool")` for the full walkthrough, and
-[**Worked example: Myanmar**](https://requitytools.github.io/rEquityTool/articles/myanmar-worked-example.html)
-for a complete analysis with a real country workbook — from opening the
-spreadsheet to reporting national, urban and sample-based quintiles.
+## Documentation
+
+Full documentation: <https://requitytools.github.io/rEquityTool/>
+
+| Article | What it covers |
+|---|---|
+| [Get started](https://requitytools.github.io/rEquityTool/articles/rEquityTool.html) | Installation, the core workflow, the main caveats |
+| [Worked example: Myanmar](https://requitytools.github.io/rEquityTool/articles/myanmar-worked-example.html) | A complete analysis with a real country workbook, in twelve steps — from opening the spreadsheet to reporting national, urban and sample-based quintiles |
+| [Choosing a wealth quintile scope](https://requitytools.github.io/rEquityTool/articles/scopes.html) | National vs urban vs rural vs sample: what each means and when to use it |
+| [Working with different country workbooks](https://requitytools.github.io/rEquityTool/articles/workbooks.html) | The three structural variants, rural/urban rescaling, and how to check a workbook before trusting it |
+| [Reference](https://requitytools.github.io/rEquityTool/reference/) | Every function, grouped by task |
+
+Offline, from R: `vignette("rEquityTool")`,
+`vignette("myanmar-worked-example")`, `vignette("scopes")`,
+`vignette("workbooks")`.
 
 ## What `scope` means
 

@@ -1,0 +1,102 @@
+title: rEquityTool
+
+url: https://requitytools.github.io/rEquityTool/
+
+development:
+  mode: unreleased
+
+template:
+  bootstrap: 5
+  math-rendering: mathjax
+  bslib:
+    bootswatch: flatly
+    pkgdown-nav-height: 90px
+    primary: "#1f6f78"
+    success: "#1f6f78"
+    base_font: {google: "Source Sans 3"}
+    heading_font: {google: "Source Sans 3"}
+    code_font: {google: "JetBrains Mono"}
+
+# pkgdown defaults to ragg for figures. Fall back to grDevices so the site
+# builds on machines without a working ragg/systemfonts/textshaping stack.
+figures:
+  dev: grDevices::png
+  dpi: 96
+  fig.width: 7.5
+
+navbar:
+  bg: success
+  type: dark
+  structure:
+    left:  [home, intro, reference, articles, news]
+    right: [search, equitytool, github]
+
+  components:
+    intro:
+      text: Get started
+      href: articles/rEquityTool.html
+    articles:
+      text: Articles
+      menu:
+      - text: "Worked example: Myanmar, end to end"
+        href: articles/myanmar-worked-example.html
+      - text: "-------"
+      - text: "Choosing a wealth quintile scope"
+        href: articles/scopes.html
+      - text: "Working with different country workbooks"
+        href: articles/workbooks.html
+    equitytool:
+      icon: "fa-globe"
+      aria-label: EquityTool website
+      href: https://equitytool.org
+
+home:
+  title: Wealth scores and wealth quintiles from EquityTool questionnaires
+  description: >
+    Read an EquityTool country workbook, validate your survey data against it,
+    and assign households to wealth quintiles using the published national,
+    urban or rural cut-points, or your own sample's distribution.
+  links:
+  - text: Download a country workbook
+    href: https://equitytool.org/countries/
+  - text: How the EquityTool is built
+    href: https://equitytool.org/methods/
+
+reference:
+- title: Package
+  contents:
+  - rEquityTool-package
+
+- title: Loading an EquityTool
+  desc: >
+    Find and read the country workbooks published at equitytool.org. The
+    package ships no EquityTool data; you supply the workbook.
+  contents:
+  - et_find_workbooks
+  - et_parse_workbook
+  - et_example
+
+- title: Inspecting a tool
+  desc: >
+    What questions it asks, what each answer scores, where the quintile
+    boundaries fall, and whether the workbook contradicts itself.
+  contents:
+  - et_accessors
+
+- title: Scoring survey data
+  desc: >
+    Check response coding, then compute wealth scores and assign quintiles.
+  contents:
+  - et_validate
+  - et_score
+
+- title: Data
+  desc: >
+    A small synthetic survey used throughout the examples.
+  contents:
+  - demo_survey
+
+footer:
+  structure:
+    left: developed_by
+    right: built_with
